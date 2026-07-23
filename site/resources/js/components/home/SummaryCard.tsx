@@ -101,28 +101,36 @@ const SummaryCard = ({ item, buttonGroupComponent }: Props) => {
   return (
     <div
       onClick={() => handleOpenDetail()}
-      className="flex gap-2 justify-between w-full bg-white rounded-lg z-50 border border-WHITE_E0E2E4 shadow-sm cursor-pointer">
-      <div className="flex flex-col gap-2 justify-between w-full">
-        <div className="flex flex-col gap-1 sm:gap-2 p-2 sm:p-3 w-full">
+      className="group relative flex justify-between w-full bg-white rounded-2xl border border-slate-200/60 shadow-[0_2px_12px_-5px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_-10px_rgba(0,77,128,0.08)] hover:-translate-y-1 transition-all duration-300 ease-out cursor-pointer overflow-hidden z-50">
+      <div className="flex flex-col justify-between flex-1 p-4 sm:p-5">
+        <div className="flex flex-col gap-3">
           {!isJobSeeker ? (
             <div className="flex gap-2 items-center">
-              <Title type="body2" bold className="text-BLACK_1E2022">
+              <Title type="body2" bold className="text-slate-800 tracking-tight text-[17px]">
                 {name}
               </Title>
-              {isVerified ? <Verified width={12} height={12} /> : null}
+              {isVerified ? (
+                <span className="inline-flex items-center justify-center p-0.5 bg-blue-50 text-blue-600 rounded-full">
+                  <Verified width={13} height={13} />
+                </span>
+              ) : null}
             </div>
           ) : (
             <div className="flex gap-2 items-center">
-              <Title type="body2" className="text-BLACK_1E2022 line-clamp-2">
+              <Title type="body2" className="text-slate-800 tracking-tight font-bold text-[17px] line-clamp-2">
                 {isJapanese
                   ? (item as IJobData)?.jobTitleJa
                   : (item as IJobData)?.jobTitle}
               </Title>
-              {isVerified ? <Verified width={12} height={12} /> : null}
+              {isVerified ? (
+                <span className="inline-flex items-center justify-center p-0.5 bg-blue-50 text-blue-600 rounded-full">
+                  <Verified width={13} height={13} />
+                </span>
+              ) : null}
             </div>
           )}
           {/* Tags */}
-          <div className="flex flex-wrap gap-1 sm:gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {isJobSeeker ? (
               <>
                 {jobLocation && (
@@ -137,7 +145,7 @@ const SummaryCard = ({ item, buttonGroupComponent }: Props) => {
               </>
             )}
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5 pt-2 border-t border-slate-100/80">
             {isJobSeeker ? (
               <>
                 {tags?.map(preferenceItem => {
@@ -173,16 +181,21 @@ const SummaryCard = ({ item, buttonGroupComponent }: Props) => {
             )}
           </div>
         </div>
-        <div className="flex self-center pb-2">{buttonGroupComponent}</div>
+        <div className="flex self-center pt-5 sm:pt-4 w-full justify-center">
+          {buttonGroupComponent}
+        </div>
       </div>
-      <img
-        src={imageUrl}
-        className={
-          'hidden sm:flex object-cover w-[120px] h-[160px] rounded-r-lg'
-        }
-        alt={!isJobSeeker ? `${name}-image` : 'job-image'}
-        loading="lazy"
-      />
+      {imageUrl && (
+        <div className="hidden sm:flex relative items-center justify-center m-3 w-[120px] h-[160px] rounded-xl overflow-hidden bg-slate-50 shadow-inner flex-shrink-0">
+          <img
+            src={imageUrl}
+            className="object-cover w-full h-full transform group-hover:scale-[1.06] transition-transform duration-500 ease-out"
+            alt={!isJobSeeker ? `${name}-image` : 'job-image'}
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none" />
+        </div>
+      )}
     </div>
   );
 };

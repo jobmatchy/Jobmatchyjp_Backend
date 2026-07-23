@@ -15,13 +15,13 @@ interface Props {
 const DashboardWrapper = (props: Props) => {
   usePageView();
   return (
-    <div className="overflow-scroll flex flex-col h-screen">
+    <div className="flex flex-col h-screen overflow-hidden bg-slate-50/50 bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e0f2fe]/30 font-sans">
       <DashboardHeader />
       <div
-        className={`h-[calc(100vh-64px)] flex flex-col overflow-scroll ${props.className}`}>
+        className={`flex-1 flex flex-col overflow-y-auto overflow-x-hidden ${props.className ?? ''}`}>
         <div
           className={
-            'max-w-5xl w-full py-4 px-4 sm:px-12 flex flex-1 mx-auto mb-4'
+            'max-w-4xl w-full py-6 px-4 sm:px-8 flex flex-col flex-1 mx-auto mb-6 transition-all duration-300'
           }>
           {props.children}
         </div>

@@ -240,7 +240,7 @@ const HomeScreen = () => {
       {isFavoriteLoading && <Spin fullscreen />}
       <div className="flex flex-col gap-4 justify-center w-full">
         {!isLoading && (
-          <div className="sticky w-full top-0 pb-2 flex gap-4 justify-between bg-white z-[100]">
+          <div className="sticky w-full top-0 py-3 px-1 flex gap-4 justify-between bg-transparent z-[100]">
             <button
               onClick={() => {
                 const feedToBeRewind = leftSwipedItems?.[0]?.id;
@@ -263,17 +263,25 @@ const HomeScreen = () => {
                 }
               }}
               disabled={!isUndoAllowed || isRewindLoading}
-              className={`${isUndoAllowed ? '' : 'opacity-50 cursor-not-allowed'} hover:bg-WHITE_F6F6F6`}>
+              className={`p-2.5 rounded-full border border-slate-200/60 bg-white/90 backdrop-blur-md shadow-sm transition-all duration-300 ${
+                isUndoAllowed
+                  ? 'hover:bg-slate-50 hover:border-slate-300 text-slate-700 hover:shadow-md hover:scale-105 active:scale-95'
+                  : 'opacity-40 cursor-not-allowed text-slate-300'
+              }`}
+              aria-label="rewind"
+            >
               <ArrowBack
-                width={36}
-                height={36}
-                className="w-6 h-6 sm:w-9 sm:h-9"
+                width={20}
+                height={20}
+                className="w-5 h-5"
               />
             </button>
             <button
               onClick={() => setFilterModalVisible(true)}
-              className="hover:bg-WHITE_F6F6F6">
-              <Filter width={20} height={20} />
+              className="p-2.5 rounded-full border border-slate-200/60 bg-white/90 backdrop-blur-md shadow-sm text-slate-700 hover:bg-slate-50 hover:border-slate-300 hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-300"
+              aria-label="filter"
+            >
+              <Filter width={18} height={18} className="w-[18px] h-[18px]" />
             </button>
           </div>
         )}
@@ -292,10 +300,11 @@ const HomeScreen = () => {
                     <SummaryCard
                       item={item as IJobData | IJobSeekerProfile}
                       buttonGroupComponent={
-                        <div className="flex gap-4 items-center self-center w-full">
+                        <div className="flex gap-4 items-center justify-center w-full">
                           {/* Left Swipe ( CROSS Button ) */}
                           <button
-                            className="hover:shadow-lg rounded-full"
+                            title={t('swipe.left') ?? 'Pass'}
+                            className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white border border-slate-200/70 shadow-sm text-rose-500 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 hover:shadow-md hover:scale-110 active:scale-90 transition-all duration-300"
                             onClick={e => {
                               e.stopPropagation();
                               const feedDataId = item?.id;
@@ -303,29 +312,32 @@ const HomeScreen = () => {
                                 handleSwipeLeft(feedDataId);
                               }
                             }}>
-                            <CloseCircle className="w-8 h-8 sm:w-9 sm:h-12" />
+                            <CloseCircle width={22} height={22} className="w-5.5 h-5.5 text-rose-500" />
                           </button>
                           {/* Favorite / Bookmark */}
                           <button
-                            className="hover:shadow-lg rounded-full"
+                            title={t('swipe.favorite') ?? 'Favorite'}
+                            className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white border border-slate-200/70 shadow-sm text-amber-500 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200 hover:shadow-md hover:scale-110 active:scale-90 transition-all duration-300"
                             onClick={e => {
                               e.stopPropagation();
                               handleBoomark(item);
                             }}>
-                            <BookmarkCircle className="w-8 h-8 sm:w-9 sm:h-12" />
+                            <BookmarkCircle width={22} height={22} className="w-5.5 h-5.5 text-amber-500" />
                           </button>
                           {/* Chat Request */}
                           <button
-                            className="hover:shadow-lg rounded-full"
+                            title={t('swipe.chat') ?? 'Chat'}
+                            className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white border border-slate-200/70 shadow-sm text-blue-500 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 hover:shadow-md hover:scale-110 active:scale-90 transition-all duration-300"
                             onClick={e => {
                               e.stopPropagation();
                               handleChatRequest(item);
                             }}>
-                            <ChatRequest className="w-8 h-8 sm:w-9 sm:h-12" />
+                            <ChatRequest width={22} height={22} className="w-5.5 h-5.5 text-blue-500" />
                           </button>
                           {/* Right Swipe ( CHECKMARK Button ) */}
                           <button
-                            className="hover:shadow-lg rounded-full"
+                            title={t('swipe.right') ?? 'Like'}
+                            className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white border border-slate-200/70 shadow-sm text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-md hover:scale-110 active:scale-90 transition-all duration-300"
                             onClick={e => {
                               e.stopPropagation();
                               if (!isSubscribed && swipeCount >= dailyLimit) {
@@ -336,7 +348,7 @@ const HomeScreen = () => {
                                 handleSwipeRight(feedDataId);
                               }
                             }}>
-                            <CheckGreen className="w-8 h-8 sm:w-9 sm:h-12" />
+                            <CheckGreen width={22} height={22} className="w-5.5 h-5.5 text-emerald-500" />
                           </button>
                         </div>
                       }
