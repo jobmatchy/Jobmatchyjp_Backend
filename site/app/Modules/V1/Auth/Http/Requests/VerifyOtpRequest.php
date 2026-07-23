@@ -24,7 +24,8 @@ class VerifyOtpRequest extends FormRequest
     public function rules()
     {
         return [
-            // Define your validation rules here
+            'user_id' => 'required|exists:users,id',
+            'otp' => 'required|string|size:6',
         ];
     }
 

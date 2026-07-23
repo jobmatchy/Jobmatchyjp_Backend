@@ -16,22 +16,21 @@ return [
 
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 
-
-    // 'allowed_origins' => [env('APP_URL')],
-    'allowed_origins'=>['*'],
-
-    //'allowed_origins' => [env('VITE_BASE_URL')],
-
+    'allowed_origins' => [
+        'https://jobmatchy.net',
+        'https://www.jobmatchy.net',
+        env('APP_FRONTEND_URL', 'http://localhost:3000'), // For local development
+    ],
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => ['Content-Type', 'X-Requested-With', 'Authorization', 'Accept', 'Origin'],
 
     'exposed_headers' => [],
 
-    'max_age' => 0,
+    'max_age' => 86400, // Cache preflight for 24 hours
 
-    'supports_credentials' => env('SUPPORTS_CREDENTIALS'),
+    'supports_credentials' => true,
 ];

@@ -10,6 +10,7 @@ use App\Http\Requests\V1\Auth\VerifyOtpRequest;
 use App\Models\User;
 use App\Notifications\ResetPasswordNotification;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
 class EmailForgotPassword extends BaseController
@@ -34,7 +35,8 @@ class EmailForgotPassword extends BaseController
             if ($request->has('email')) {
                 $user = User::where('email', $request->email)->first();
                 $user->notify(new ResetPasswordNotification($otp));
-                tap($user->update(['otp' => $otp]));
+                // Store hashed OTP for security
+                tap($user->update(['otp' => Hash::make($otp)]));
                 $message = trans('lang.user.check_email', [], $lang);
             } else {
                 $user = User::where('phone', $request->phone)->first();
@@ -114,7 +116,16 @@ class EmailForgotPassword extends BaseController
             ? $request->header('Accept-Language')
             : 'en';
         try {
-            $user = $this->checkUniqueOtp($request->otp);
+            $user = User::findOrFail($request->user_id);
+
+            // Verify hashed OTP
+            if (!$user->otp || !Hash::check($request->otp, $user->otp)) {
+                return $this->errors(
+                    ['message' => trans('lang.invalid_otp', [], $lang)],
+                    400
+                );
+            }
+
             $data = [
                 'email' => $user->email,
                 'phone' => $user->phone,

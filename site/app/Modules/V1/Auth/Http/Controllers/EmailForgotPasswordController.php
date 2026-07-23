@@ -12,6 +12,7 @@ use App\Modules\V1\Auth\Notifications\ResetPasswordNotification;
 use App\Modules\V1\User\Models\User;
 use App\Modules\V1\User\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class EmailForgotPasswordController extends BaseController
 {
@@ -35,7 +36,8 @@ class EmailForgotPasswordController extends BaseController
             if ($request->has('email')) {
                 $user = User::where('email', $request->email)->first();
                 $user->notify(new ResetPasswordNotification($otp));
-                tap($user->update(['otp' => $otp]));
+                // Store hashed OTP for security
+                tap($user->update(['otp' => Hash::make($otp)]));
                 $message = trans('lang.user.check_email', [], $lang);
             } else {
                 $user = User::where('phone', $request->phone)->first();
@@ -115,20 +117,24 @@ class EmailForgotPasswordController extends BaseController
             ? $request->header('Accept-Language')
             : 'en';
         try {
-            $user = $this->checkUniqueOtp($request->otp);
-            if($user) {
-                $data = [
-                    'email' => $user->email,
-                    'phone' => $user->phone,
-                    'countryCode' => $user->country_code,
-                    'userId' => $user->id,
-                ];
-                return $this->success($data, trans('lang.user.details', [], $lang));
+            $user = User::findOrFail($request->user_id);
+
+            // Verify hashed OTP
+            if (!$user->otp || !Hash::check($request->otp, $user->otp)) {
+                return $this->errors(
+                    ['message' => trans('lang.invalid_otp', [], $lang)],
+                    400
+                );
             }
 
-            return $this->errors(trans('lang.invalid_otp'), 400);
+            $data = [
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'countryCode' => $user->country_code,
+                'userId' => $user->id,
+            ];
 
-
+            return $this->success($data, trans('lang.user.details', [], $lang));
         } catch (\Exception $e) {
             return $this->errors(['message' => $e->getMessage()], 400);
         }

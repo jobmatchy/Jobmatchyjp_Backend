@@ -39,7 +39,8 @@ class VerifyOtpRequest extends CustomFormRequest
     public function getOtpValidationRules(): array
     {
         return [
-            'otp' => 'required|exists:users,otp',
+            'user_id' => 'required|exists:users,id',
+            'otp' => 'required|string|size:6',
         ];
     }
 
@@ -48,8 +49,10 @@ class VerifyOtpRequest extends CustomFormRequest
         $lang = $this->lang;
 
         return [
+            'user_id.required' => __('validation.required.user_id', [], $lang),
+            'user_id.exists' => __('validation.exists.user', [], $lang),
             'otp.required' => __('validation.required.otp', [], $lang),
-            'otp.exists' => __('validation.exists.otp', [], $lang),
+            'otp.size' => __('validation.size.otp', [], $lang),
         ];
     }
 }
