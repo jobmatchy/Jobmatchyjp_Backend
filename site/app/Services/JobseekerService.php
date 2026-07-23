@@ -68,17 +68,36 @@ class JobseekerService extends BaseService
             $request->has('age_from') && $request->has('age_to'),
             function ($query) use ($request) {
                 $query->where(function ($subQuery) use ($request) {
-                    if ($request->has('age_from')) {
-                        $subQuery->whereRaw(
-                            'TIMESTAMPDIFF(YEAR, birthday, CURDATE()) >= ?',
-                            [$request->age_from]
-                        );
-                    }
-                    if ($request->has('age_to')) {
-                        $subQuery->whereRaw(
-                            'TIMESTAMPDIFF(YEAR, birthday, CURDATE()) <= ?',
-                            [$request->age_to]
-                        );
+                    $driver = config('database.default');
+
+                    if ($driver === 'pgsql') {
+                        // PostgreSQL syntax
+                        if ($request->has('age_from')) {
+                            $subQuery->whereRaw(
+                                'EXTRACT(YEAR FROM AGE(CURRENT_DATE, birthday)) >= ?',
+                                [$request->age_from]
+                            );
+                        }
+                        if ($request->has('age_to')) {
+                            $subQuery->whereRaw(
+                                'EXTRACT(YEAR FROM AGE(CURRENT_DATE, birthday)) <= ?',
+                                [$request->age_to]
+                            );
+                        }
+                    } else {
+                        // MySQL syntax
+                        if ($request->has('age_from')) {
+                            $subQuery->whereRaw(
+                                'TIMESTAMPDIFF(YEAR, birthday, CURDATE()) >= ?',
+                                [$request->age_from]
+                            );
+                        }
+                        if ($request->has('age_to')) {
+                            $subQuery->whereRaw(
+                                'TIMESTAMPDIFF(YEAR, birthday, CURDATE()) <= ?',
+                                [$request->age_to]
+                            );
+                        }
                     }
                 });
             }
