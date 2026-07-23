@@ -49,7 +49,7 @@ class JobsController extends AdminController
                 '4' => 'Both',
             ];
 
-            return $gender[$column];
+            return $gender[$column] ?? '-';
         });
 
         $grid->column('published', __('Published'))->dateFormat('Y-m-d');
