@@ -59,7 +59,7 @@ class JobseekerService extends BaseService
         );
         $jobseekers->when(
             $request->has('experience')
-                && !empty($request->$request->experience),
+                && !empty($request->experience),
             function ($query) use ($request) {
                 return $query->where('experience', $request->experience);
             }
