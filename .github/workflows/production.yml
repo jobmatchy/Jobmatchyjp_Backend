@@ -1,0 +1,22 @@
+name: deploy to production
+
+on: [push]
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/production'
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+            host: ${{ secrets.SERVER_IP_PRODUCTION }}
+            username: ${{ secrets.SERVER_USERNAME_PRODUCTION }}
+            password: ${{ secrets.SERVER_PASSWORD_PRODUCTION }}
+            script: cd ${{ secrets.PROJECT_PATH_PRODUCTION }} && git remote set-url origin git@github.com:gamenic-nabin/job-matchy-api.git && git pull https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PASSWORD }}@github.com/gamenic-nabin/job-matchy-api.git production
+            
+
+
+            

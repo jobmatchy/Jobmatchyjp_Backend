@@ -1,0 +1,48 @@
+/vendor/
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Laravel 4 specific
+bootstrap/compiled.php
+app/storage/
+
+# Laravel 5 & Lumen specific
+public/storage
+public/hot
+
+# Laravel 5 & Lumen specific with changed public path
+public_html/storage
+public_html/hot
+
+storage/*.key
+.env
+.env.*
+!.env.example
+Homestead.yaml
+Homestead.json
+/.vagrant
+.phpunit.result.cache
+
+# Secrets / credentials / keys
+*.pem
+*.key
+!laradock/ssl/*.example.key
+site/firebase-credentials/
+site/google-credentials/
+DB/*.sql
+laradock/workspace/insecure_id_rsa
+laradock/workspace/insecure_id_rsa.pub
+laradock/workspace/insecure_id_rsa.ppk
+
+.DS_Store
+
+#nginx config file
+laradock/nginx/sites/jobmatchy.conf
+laradock/nginx/sites/develop.jobmatchy.conf
+laradock/nginx/sites/default.conf
+laradock/nginx/sites/node.conf
+
+site/package-lock.json
+node/package-lock.json
+site/yarn.lock

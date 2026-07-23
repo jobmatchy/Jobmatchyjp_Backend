@@ -1,0 +1,16 @@
+https://api.jobmatchy.localhost {
+    root /var/www/socketserver
+    fastcgi / php-fpm:9000 php {
+        app app.js
+    }
+
+    rewrite {
+        to {path} {path}/ /index.php?{query}
+    }
+    gzip
+    browse
+    log /var/log/caddy/access.log
+    errors /var/log/caddy/error.log
+
+    tls self_signed
+}
